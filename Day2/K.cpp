@@ -26,6 +26,9 @@ struct Trie {
         len[u] = std::strlen(s);
         val[u] = std::min(val[u], x);
     }
+
+    std::vector<int> G[MAXN];
+
     void build() {
         std::queue<int> q;
         f[rt] = rt;
@@ -44,6 +47,17 @@ struct Trie {
                 else
                     ch[u][c] = ch[f[u]][c];
             }
+        }
+        for (int i = 1; i < sz; i++) {
+            G[f[i]].push_back(i);
+        }
+        dfs(rt, rt);
+    }
+    void dfs(int u, int cur) {
+        f[u] = cur;
+        if (len[u]) cur = u;
+        for (auto& v : G[u]) {
+            dfs(v, cur);
         }
     }
 } ac;
@@ -70,7 +84,6 @@ int main() {
     std::fill(dp + 1, dp + n + 1, INF);
     dp[0] = 0;
     int u = ac.rt;
-
     for (int i = 0; buf[i]; i++) {
         u = ac.ch[u][buf[i] - 'a'];
         int v = u;
@@ -80,7 +93,7 @@ int main() {
                     std::min(dp[i + 1], dp[i + 1 - ac.len[v]] + ac.val[v]);
             }
             v = ac.f[v];
-        } while(v != ac.rt);
+        } while (v != ac.rt);
     }
     if (dp[n] == INF) dp[n] = -1;
     printf("%lld\n", dp[n]);
