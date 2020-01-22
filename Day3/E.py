@@ -1,0 +1,1 @@
+for _ in range(int(input())): print('call' if [input() for _ in range(int(input().split()[0]))][0][0] == '1' else 'aoligei')
